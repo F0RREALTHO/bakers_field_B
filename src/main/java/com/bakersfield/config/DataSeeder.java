@@ -31,10 +31,16 @@ public class DataSeeder {
       @Value("${admin.bootstrap.username:admin}") String adminUsername,
       @Value("${admin.bootstrap.password:admin123}") String adminPassword) {
     return args -> {
-      if (adminUserRepository.count() == 0) {
-        AdminUser admin = new AdminUser();
-        admin.setUsername(adminUsername);
+      AdminUser admin = adminUserRepository.findByUsername(adminUsername)
+          .orElseGet(() -> {
+            AdminUser created = new AdminUser();
+            created.setUsername(adminUsername);
+            return created;
+          });
+      if (!passwordEncoder.matches(adminPassword, admin.getPasswordHash() == null ? "" : admin.getPasswordHash())) {
         admin.setPasswordHash(passwordEncoder.encode(adminPassword));
+      }
+      if (admin.getId() == null || admin.getPasswordHash() != null) {
         adminUserRepository.save(admin);
       }
 

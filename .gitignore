@@ -3,5 +3,6 @@ target/
 *.tmp
 .env
 !.env.example
+src/main/resources/application-local.yml
 .idea/
 .vscode/

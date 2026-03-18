@@ -21,10 +21,10 @@ public class DataChangePublisher {
 
     /**
      * Register a new SSE client.
-     * A 5-minute timeout keeps persistent connections from staying open indefinitely.
+     * Keep stream open for long-lived UI subscriptions (frontend reconnects on network drops).
      */
     public SseEmitter subscribe() {
-        SseEmitter emitter = new SseEmitter(5 * 60 * 1000L); // 5-minute timeout
+        SseEmitter emitter = new SseEmitter(0L); // no server-side timeout
         emitters.add(emitter);
 
         // Clean up on completion, timeout, or error

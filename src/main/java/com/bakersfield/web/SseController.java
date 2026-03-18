@@ -2,7 +2,6 @@ package com.bakersfield.web;
 
 import com.bakersfield.service.DataChangePublisher;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +14,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
  */
 @RestController
 @RequestMapping("/api/events")
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"})
 public class SseController {
 
     private final DataChangePublisher publisher;

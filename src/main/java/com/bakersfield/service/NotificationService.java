@@ -48,6 +48,13 @@ public class NotificationService {
     }
 
     @Async
+    public void sendOwnerOtpEmail(String to, String otp) {
+        String subject = "BakersField Owner Login OTP";
+        String body = "Your OTP for owner login is: " + otp + "\n\nThis OTP expires in 5 minutes.";
+        sendEmail(to, subject, body);
+    }
+
+    @Async
     public void sendOrderNotification(Order order) {
         try {
             String subject = "New Order Recieved: #" + order.getId();

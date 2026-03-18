@@ -28,7 +28,7 @@ public class SecurityConfig {
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/h2-console/**").permitAll()
-            .requestMatchers("/api/admin/login").permitAll()
+          .requestMatchers("/api/admin/login/**").permitAll()
             .requestMatchers("/api/admin/**").hasRole("ADMIN")
             .requestMatchers("/api/**").permitAll()
             .anyRequest().permitAll())
