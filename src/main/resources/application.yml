@@ -1,0 +1,45 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bakersfield
+    driver-class-name: org.postgresql.Driver
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${SPRING_MAIL_USERNAME:}
+    password: ${SPRING_MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+server:
+  port: 8080
+  tomcat:
+    max-http-form-post-size: 10MB
+
+admin:
+  bootstrap:
+    username: ${ADMIN_BOOTSTRAP_USERNAME:admin}
+    password: ${ADMIN_BOOTSTRAP_PASSWORD:admin123}
+  notification:
+    email: ${ADMIN_NOTIFICATION_EMAIL:}
+    whatsapp_number: ${ADMIN_NOTIFICATION_WHATSAPP_NUMBER:}
+    twilio_account_sid: ${ADMIN_NOTIFICATION_TWILIO_ACCOUNT_SID:}
+    twilio_auth_token: ${ADMIN_NOTIFICATION_TWILIO_AUTH_TOKEN:}
+    twilio_phone_number: ${ADMIN_NOTIFICATION_TWILIO_PHONE_NUMBER:whatsapp:+14155238886}
+
+jwt:
+  secret: ${JWT_SECRET:change-this-secret-to-32-chars-minimum}
+  ttlMinutes: 240
