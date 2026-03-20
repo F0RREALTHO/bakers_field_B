@@ -14,8 +14,8 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
   mail:
-    host: smtp.gmail.com
-    port: 587
+    host: ${SPRING_MAIL_HOST:smtp.gmail.com}
+    port: ${SPRING_MAIL_PORT:587}
     username: ${SPRING_MAIL_USERNAME:}
     password: ${SPRING_MAIL_PASSWORD:}
     properties:
@@ -40,8 +40,8 @@ storage:
 
 admin:
   bootstrap:
-    username: ${ADMIN_BOOTSTRAP_USERNAME:admin}
-    password: ${ADMIN_BOOTSTRAP_PASSWORD:admin123}
+    username: ${ADMIN_USERNAME:admin}
+    password: ${ADMIN_PASSWORD:admin123}
   notification:
     email: ${ADMIN_NOTIFICATION_EMAIL:}
     whatsapp_number: ${ADMIN_NOTIFICATION_WHATSAPP_NUMBER:}
