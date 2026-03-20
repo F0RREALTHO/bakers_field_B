@@ -20,7 +20,7 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 @RestController
 @RequestMapping("/api/uploads")
 public class UploadController {
-  private static final long MAX_BYTES = 2L * 1024 * 1024;
+  private static final long MAX_BYTES = 8L * 1024 * 1024;
 
   private final S3Client r2Client;
   private final String bucket;
@@ -42,7 +42,7 @@ public class UploadController {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File is required");
     }
     if (file.getSize() > MAX_BYTES) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File must be <= 2MB");
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File must be <= 8MB");
     }
     String contentType = file.getContentType();
     if (contentType == null || !contentType.toLowerCase(Locale.ROOT).startsWith("image/")) {
@@ -65,6 +65,8 @@ public class UploadController {
       r2Client.putObject(request, RequestBody.fromBytes(file.getBytes()));
     } catch (IOException ex) {
       throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Upload failed");
+    } catch (RuntimeException ex) {
+      throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Storage upload failed");
     }
 
     String base = publicBaseUrl.endsWith("/") ? publicBaseUrl.substring(0, publicBaseUrl.length() - 1) : publicBaseUrl;
