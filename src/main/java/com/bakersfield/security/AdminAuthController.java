@@ -41,29 +41,9 @@ public class AdminAuthController {
     this.ownerOtpEmail = ownerOtpEmail;
   }
 
-  @PostMapping("/login/request-otp")
-  @ResponseStatus(HttpStatus.OK)
-  public OtpRequestResponse requestLoginOtp(@Valid @RequestBody AdminOtpRequest request) {
-    AdminUser admin = validateCredentials(request.username(), request.password());
-    String otp = ownerOtpService.generateOtp(admin.getUsername());
-    notificationService.sendOwnerOtpEmail(ownerOtpEmail, otp);
-    return new OtpRequestResponse("OTP sent to owner email");
-  }
-
-  @PostMapping("/login")
-  @ResponseStatus(HttpStatus.OK)
-  public AdminLoginResponse login(@Valid @RequestBody AdminLoginRequest request) {
-    AdminUser admin = validateCredentials(request.username(), request.password());
-    if (!ownerOtpService.verifyOtp(admin.getUsername(), request.otp())) {
-      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid or expired OTP");
-    }
-    JwtService.JwtToken token = jwtService.generateToken(admin.getUsername());
-    return new AdminLoginResponse(token.token(), token.expiresAt());
-  }
-
   // Secret owner login route - use this URL in production (only you know this path)
-  // URL: POST /api/admin/x7k2m9n5b3v1w4q6z2a4m8p0/login/request-otp
-  @PostMapping("/x7k2m9n5b3v1w4q6z2a4m8p0/login/request-otp")
+  // URL: POST /api/admin/k9v3p8t7q4n6r1x5m0c2z8h1/login/request-otp
+  @PostMapping("/k9v3p8t7q4n6r1x5m0c2z8h1/login/request-otp")
   @ResponseStatus(HttpStatus.OK)
   public OtpRequestResponse secretRequestLoginOtp(@Valid @RequestBody AdminOtpRequest request) {
     AdminUser admin = validateCredentials(request.username(), request.password());
@@ -73,8 +53,8 @@ public class AdminAuthController {
   }
 
   // Secret owner login route - complete login with OTP
-  // URL: POST /api/admin/x7k2m9n5b3v1w4q6z2a4m8p0/login
-  @PostMapping("/x7k2m9n5b3v1w4q6z2a4m8p0/login")
+  // URL: POST /api/admin/k9v3p8t7q4n6r1x5m0c2z8h1/login
+  @PostMapping("/k9v3p8t7q4n6r1x5m0c2z8h1/login")
   @ResponseStatus(HttpStatus.OK)
   public AdminLoginResponse secretLogin(@Valid @RequestBody AdminLoginRequest request) {
     AdminUser admin = validateCredentials(request.username(), request.password());
