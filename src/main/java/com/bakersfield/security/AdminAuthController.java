@@ -25,6 +25,7 @@ public class AdminAuthController {
   private final OwnerOtpService ownerOtpService;
   private final NotificationService notificationService;
   private final String ownerOtpEmail;
+  private final boolean adminRequireOtp;
 
   public AdminAuthController(
       JwtService jwtService,
@@ -32,13 +33,15 @@ public class AdminAuthController {
       PasswordEncoder passwordEncoder,
       OwnerOtpService ownerOtpService,
       NotificationService notificationService,
-      @Value("${ADMIN_OWNER_OTP_EMAIL:rashmijee@rediffmail.com}") String ownerOtpEmail) {
+      @Value("${ADMIN_OWNER_OTP_EMAIL:rashmijee@rediffmail.com}") String ownerOtpEmail,
+      @Value("${ADMIN_REQUIRE_OTP:true}") boolean adminRequireOtp) {
     this.jwtService = jwtService;
     this.adminUserRepository = adminUserRepository;
     this.passwordEncoder = passwordEncoder;
     this.ownerOtpService = ownerOtpService;
     this.notificationService = notificationService;
     this.ownerOtpEmail = ownerOtpEmail;
+    this.adminRequireOtp = adminRequireOtp;
   }
 
   // Secret owner login route - use this URL in production (only you know this path)
@@ -47,6 +50,9 @@ public class AdminAuthController {
   @ResponseStatus(HttpStatus.OK)
   public OtpRequestResponse secretRequestLoginOtp(@Valid @RequestBody AdminOtpRequest request) {
     AdminUser admin = validateCredentials(request.username(), request.password());
+    if (!adminRequireOtp) {
+      return new OtpRequestResponse("OTP disabled by configuration");
+    }
     String otp = ownerOtpService.generateOtp(admin.getUsername());
     notificationService.sendOwnerOtpEmail(ownerOtpEmail, otp);
     return new OtpRequestResponse("OTP sent to owner email");
@@ -58,7 +64,10 @@ public class AdminAuthController {
   @ResponseStatus(HttpStatus.OK)
   public AdminLoginResponse secretLogin(@Valid @RequestBody AdminLoginRequest request) {
     AdminUser admin = validateCredentials(request.username(), request.password());
-    if (!ownerOtpService.verifyOtp(admin.getUsername(), request.otp())) {
+    if (adminRequireOtp && (request.otp() == null || request.otp().isBlank())) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OTP is required");
+    }
+    if (adminRequireOtp && !ownerOtpService.verifyOtp(admin.getUsername(), request.otp())) {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid or expired OTP");
     }
     JwtService.JwtToken token = jwtService.generateToken(admin.getUsername());
@@ -81,7 +90,7 @@ public class AdminAuthController {
   public record OtpRequestResponse(String message) {
   }
 
-  public record AdminLoginRequest(@NotBlank String username, @NotBlank String password, @NotBlank String otp) {
+  public record AdminLoginRequest(@NotBlank String username, @NotBlank String password, String otp) {
   }
 
   public record AdminLoginResponse(String token, Instant expiresAt) {
