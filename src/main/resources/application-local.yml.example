@@ -33,3 +33,11 @@ jwt:
   ttlMinutes: 240
 
 ADMIN_OWNER_OTP_EMAIL: ${ADMIN_OWNER_OTP_EMAIL:kartikeyaaryam7@gmail.com}
+
+storage:
+  r2:
+    endpoint: ${R2_ENDPOINT:}
+    accessKey: ${R2_ACCESS_KEY:}
+    secretKey: ${R2_SECRET_KEY:}
+    bucket: ${R2_BUCKET:}
+    publicBaseUrl: ${R2_PUBLIC_BASE_URL:}

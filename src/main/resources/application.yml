@@ -30,6 +30,14 @@ server:
   tomcat:
     max-http-form-post-size: 10MB
 
+storage:
+  r2:
+    endpoint: ${R2_ENDPOINT:}
+    accessKey: ${R2_ACCESS_KEY:}
+    secretKey: ${R2_SECRET_KEY:}
+    bucket: ${R2_BUCKET:}
+    publicBaseUrl: ${R2_PUBLIC_BASE_URL:}
+
 admin:
   bootstrap:
     username: ${ADMIN_BOOTSTRAP_USERNAME:admin}
