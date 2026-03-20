@@ -44,3 +44,5 @@ admin:
 jwt:
   secret: ${JWT_SECRET:change-this-secret-to-32-chars-minimum}
   ttlMinutes: 240
+
+ADMIN_OWNER_OTP_EMAIL: ${ADMIN_OWNER_OTP_EMAIL:rashmijee@rediffmail.com}
