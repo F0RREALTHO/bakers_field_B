@@ -61,6 +61,30 @@ public class AdminAuthController {
     return new AdminLoginResponse(token.token(), token.expiresAt());
   }
 
+  // Secret owner login route - use this URL in production (only you know this path)
+  // URL: POST /api/admin/x7k2m9n5b3v1w4q6z2a4m8p0/login/request-otp
+  @PostMapping("/x7k2m9n5b3v1w4q6z2a4m8p0/login/request-otp")
+  @ResponseStatus(HttpStatus.OK)
+  public OtpRequestResponse secretRequestLoginOtp(@Valid @RequestBody AdminOtpRequest request) {
+    AdminUser admin = validateCredentials(request.username(), request.password());
+    String otp = ownerOtpService.generateOtp(admin.getUsername());
+    notificationService.sendOwnerOtpEmail(ownerOtpEmail, otp);
+    return new OtpRequestResponse("OTP sent to owner email");
+  }
+
+  // Secret owner login route - complete login with OTP
+  // URL: POST /api/admin/x7k2m9n5b3v1w4q6z2a4m8p0/login
+  @PostMapping("/x7k2m9n5b3v1w4q6z2a4m8p0/login")
+  @ResponseStatus(HttpStatus.OK)
+  public AdminLoginResponse secretLogin(@Valid @RequestBody AdminLoginRequest request) {
+    AdminUser admin = validateCredentials(request.username(), request.password());
+    if (!ownerOtpService.verifyOtp(admin.getUsername(), request.otp())) {
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid or expired OTP");
+    }
+    JwtService.JwtToken token = jwtService.generateToken(admin.getUsername());
+    return new AdminLoginResponse(token.token(), token.expiresAt());
+  }
+
   private AdminUser validateCredentials(String username, String password) {
     AdminUser admin = adminUserRepository.findByUsername(username)
         .filter(AdminUser::isActive)
