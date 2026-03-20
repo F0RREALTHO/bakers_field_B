@@ -43,11 +43,11 @@ admin:
     username: ${ADMIN_USERNAME:admin}
     password: ${ADMIN_PASSWORD:admin123}
   notification:
-    email: ${ADMIN_NOTIFICATION_EMAIL:}
-    whatsapp_number: ${ADMIN_NOTIFICATION_WHATSAPP_NUMBER:}
-    twilio_account_sid: ${ADMIN_NOTIFICATION_TWILIO_ACCOUNT_SID:}
-    twilio_auth_token: ${ADMIN_NOTIFICATION_TWILIO_AUTH_TOKEN:}
-    twilio_phone_number: ${ADMIN_NOTIFICATION_TWILIO_PHONE_NUMBER:whatsapp:+14155238886}
+    email: ${ADMIN_NOTIFICATION_EMAIL:${NOTIFICATION_EMAIL:}}
+    whatsapp_number: ${ADMIN_NOTIFICATION_WHATSAPP_NUMBER:${WHATSAPP_NUMBER:}}
+    twilio_account_sid: ${ADMIN_NOTIFICATION_TWILIO_ACCOUNT_SID:${TWILIO_ACCOUNT_SID:}}
+    twilio_auth_token: ${ADMIN_NOTIFICATION_TWILIO_AUTH_TOKEN:${TWILIO_AUTH_TOKEN:}}
+    twilio_phone_number: ${ADMIN_NOTIFICATION_TWILIO_PHONE_NUMBER:${TWILIO_PHONE_NUMBER:whatsapp:+14155238886}}
 
 jwt:
   secret: ${JWT_SECRET:change-this-secret-to-32-chars-minimum}

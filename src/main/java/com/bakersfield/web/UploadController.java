@@ -3,6 +3,7 @@ package com.bakersfield.web;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,6 +22,7 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 @RequestMapping("/api/uploads")
 public class UploadController {
   private static final long MAX_BYTES = 8L * 1024 * 1024;
+  private static final Set<String> ALLOWED_EXTENSIONS = Set.of(".jpg", ".jpeg", ".png", ".webp", ".heic", ".heif");
 
   private final S3Client r2Client;
   private final String bucket;
@@ -45,7 +47,7 @@ public class UploadController {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File must be <= 8MB");
     }
     String contentType = file.getContentType();
-    if (contentType == null || !contentType.toLowerCase(Locale.ROOT).startsWith("image/")) {
+    if (!isAcceptedImage(file.getOriginalFilename(), contentType)) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Only image uploads are allowed");
     }
     if (bucket.isBlank() || publicBaseUrl.isBlank()) {
@@ -53,12 +55,13 @@ public class UploadController {
     }
 
     String extension = resolveExtension(contentType, file.getOriginalFilename());
+    String normalizedContentType = resolveContentType(contentType, extension);
     String key = "custom-orders/" + UUID.randomUUID() + extension;
 
     PutObjectRequest request = PutObjectRequest.builder()
         .bucket(bucket)
         .key(key)
-        .contentType(contentType)
+      .contentType(normalizedContentType)
         .build();
 
     try {
@@ -66,7 +69,7 @@ public class UploadController {
     } catch (IOException ex) {
       throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Upload failed");
     } catch (RuntimeException ex) {
-      throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Storage upload failed");
+      throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Storage upload failed: " + ex.getMessage());
     }
 
     String base = publicBaseUrl.endsWith("/") ? publicBaseUrl.substring(0, publicBaseUrl.length() - 1) : publicBaseUrl;
@@ -74,7 +77,7 @@ public class UploadController {
   }
 
   private String resolveExtension(String contentType, String originalName) {
-    String normalized = contentType.toLowerCase(Locale.ROOT);
+    String normalized = (contentType == null ? "" : contentType.toLowerCase(Locale.ROOT));
     if (normalized.contains("jpeg")) {
       return ".jpg";
     }
@@ -84,10 +87,38 @@ public class UploadController {
     if (normalized.contains("webp")) {
       return ".webp";
     }
+    if (normalized.contains("heic")) {
+      return ".heic";
+    }
+    if (normalized.contains("heif")) {
+      return ".heif";
+    }
     if (originalName != null && originalName.contains(".")) {
       return originalName.substring(originalName.lastIndexOf('.')).toLowerCase(Locale.ROOT);
     }
     return ".img";
+  }
+
+  private boolean isAcceptedImage(String originalName, String contentType) {
+    if (contentType != null && contentType.toLowerCase(Locale.ROOT).startsWith("image/")) {
+      return true;
+    }
+    String extension = resolveExtension(contentType, originalName);
+    return ALLOWED_EXTENSIONS.contains(extension);
+  }
+
+  private String resolveContentType(String contentType, String extension) {
+    if (contentType != null && !contentType.isBlank() && !"application/octet-stream".equalsIgnoreCase(contentType)) {
+      return contentType;
+    }
+    return switch (extension) {
+      case ".jpg", ".jpeg" -> "image/jpeg";
+      case ".png" -> "image/png";
+      case ".webp" -> "image/webp";
+      case ".heic" -> "image/heic";
+      case ".heif" -> "image/heif";
+      default -> "application/octet-stream";
+    };
   }
 
   public record UploadResponse(String url) {
