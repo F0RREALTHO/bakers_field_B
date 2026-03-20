@@ -1,0 +1,35 @@
+# Local Development Configuration Template
+# Copy this file to application-local.yml and fill in your local values
+# NOTE: application-local.yml is in .gitignore - never commit actual secrets
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:bakersfield}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:}
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+
+admin:
+  bootstrap:
+    username: ${ADMIN_USERNAME:admin}
+    password: ${ADMIN_PASSWORD:admin123}
+  notification:
+    email: ${NOTIFICATION_EMAIL:}
+    whatsapp_number: ${WHATSAPP_NUMBER:}
+    twilio_account_sid: ${TWILIO_ACCOUNT_SID:}
+    twilio_auth_token: ${TWILIO_AUTH_TOKEN:}
+    twilio_phone_number: ${TWILIO_PHONE_NUMBER:}
+
+jwt:
+  secret: ${JWT_SECRET:change-this-secret-to-32-chars-minimum}
+  ttlMinutes: 240
+
+ADMIN_OWNER_OTP_EMAIL: ${ADMIN_OWNER_OTP_EMAIL:kartikeyaaryam7@gmail.com}
