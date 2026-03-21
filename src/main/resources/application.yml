@@ -37,6 +37,8 @@ storage:
     secretKey: ${R2_SECRET_KEY:}
     bucket: ${R2_BUCKET:}
     publicBaseUrl: ${R2_PUBLIC_BASE_URL:}
+  upload:
+    customerFallbackEnabled: ${CUSTOMER_UPLOAD_LOCAL_FALLBACK:false}
 
 admin:
   bootstrap:

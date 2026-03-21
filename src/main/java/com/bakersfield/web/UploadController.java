@@ -41,7 +41,7 @@ public class UploadController {
       @Value("${storage.r2.bucket:}") String bucket,
       @Value("${storage.r2.publicBaseUrl:}") String publicBaseUrl,
       @Value("${storage.local.baseDir:uploads}") String localUploadBaseDir,
-      @Value("${storage.upload.customerFallbackEnabled:true}") boolean customerLocalFallbackEnabled) {
+      @Value("${storage.upload.customerFallbackEnabled:false}") boolean customerLocalFallbackEnabled) {
     this.r2Client = r2Client;
     this.bucket = bucket;
     this.publicBaseUrl = publicBaseUrl;
