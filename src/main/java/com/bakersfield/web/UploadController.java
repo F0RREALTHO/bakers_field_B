@@ -28,7 +28,8 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 public class UploadController {
   private static final Logger logger = LoggerFactory.getLogger(UploadController.class);
   private static final long MAX_BYTES = 8L * 1024 * 1024;
-  private static final Set<String> ALLOWED_EXTENSIONS = Set.of(".jpg", ".jpeg", ".png", ".webp", ".heic", ".heif");
+  private static final Set<String> ALLOWED_EXTENSIONS = Set.of(
+      ".jpg", ".jpeg", ".png", ".webp", ".heic", ".heif", ".avif", ".bmp", ".gif", ".tif", ".tiff");
 
   private final S3Client r2Client;
   private final String bucket;
@@ -166,6 +167,18 @@ public class UploadController {
     if (normalized.contains("webp")) {
       return ".webp";
     }
+    if (normalized.contains("avif")) {
+      return ".avif";
+    }
+    if (normalized.contains("bmp")) {
+      return ".bmp";
+    }
+    if (normalized.contains("gif")) {
+      return ".gif";
+    }
+    if (normalized.contains("tif")) {
+      return ".tif";
+    }
     if (normalized.contains("heic")) {
       return ".heic";
     }
@@ -194,6 +207,10 @@ public class UploadController {
       case ".jpg", ".jpeg" -> "image/jpeg";
       case ".png" -> "image/png";
       case ".webp" -> "image/webp";
+      case ".avif" -> "image/avif";
+      case ".bmp" -> "image/bmp";
+      case ".gif" -> "image/gif";
+      case ".tif", ".tiff" -> "image/tiff";
       case ".heic" -> "image/heic";
       case ".heif" -> "image/heif";
       default -> "application/octet-stream";
