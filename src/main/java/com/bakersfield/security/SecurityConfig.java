@@ -28,7 +28,8 @@ public class SecurityConfig {
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/h2-console/**").permitAll()
-          .requestMatchers("/api/admin/k9v3p8t7q4n6r1x5m0c2z8h1/**").permitAll()
+            .requestMatchers("/api/admin/k9v3p8t7q4n6r1x5m0c2z8h1/**").permitAll()
+            .requestMatchers("/api/admin/uploads").permitAll()
             .requestMatchers("/api/admin/**").hasRole("ADMIN")
             .requestMatchers("/api/**").permitAll()
             .anyRequest().permitAll())
