@@ -11,14 +11,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-  private final String[] allowedOrigins;
+  private final String[] allowedOriginPatterns;
   private final Path localUploadBasePath;
 
   public WebConfig(
-      @Value("${APP_CORS_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:5174,http://127.0.0.1:5173,http://127.0.0.1:5174}")
+      @Value("${APP_CORS_ALLOWED_ORIGINS:https://fieldbakers.me,https://www.fieldbakers.me,https://api.fieldbakers.me,http://localhost:5173,http://localhost:5174,http://127.0.0.1:5173,http://127.0.0.1:5174}")
       String allowedOriginsRaw,
       @Value("${storage.local.baseDir:uploads}") String localUploadBaseDir) {
-    this.allowedOrigins = Arrays.stream(allowedOriginsRaw.split(","))
+    this.allowedOriginPatterns = Arrays.stream(allowedOriginsRaw.split(","))
         .map(String::trim)
         .filter(value -> !value.isEmpty())
         .toArray(String[]::new);
@@ -28,7 +28,7 @@ public class WebConfig implements WebMvcConfigurer {
   @Override
   public void addCorsMappings(CorsRegistry registry) {
     registry.addMapping("/api/**")
-        .allowedOrigins(allowedOrigins)
+      .allowedOriginPatterns(allowedOriginPatterns)
         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
         .allowedHeaders("*");
   }
