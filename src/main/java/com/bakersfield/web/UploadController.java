@@ -34,6 +34,7 @@ public class UploadController {
   private final String bucket;
   private final String publicBaseUrl;
   private final Path localUploadBasePath;
+  private final String localPublicBaseUrl;
   private final boolean customerLocalFallbackEnabled;
 
   public UploadController(
@@ -41,11 +42,13 @@ public class UploadController {
       @Value("${storage.r2.bucket:}") String bucket,
       @Value("${storage.r2.publicBaseUrl:}") String publicBaseUrl,
       @Value("${storage.local.baseDir:uploads}") String localUploadBaseDir,
+      @Value("${storage.local.publicBaseUrl:}") String localPublicBaseUrl,
       @Value("${storage.upload.customerFallbackEnabled:false}") boolean customerLocalFallbackEnabled) {
     this.r2Client = r2Client;
     this.bucket = bucket;
     this.publicBaseUrl = publicBaseUrl;
     this.localUploadBasePath = Paths.get(localUploadBaseDir).toAbsolutePath().normalize();
+    this.localPublicBaseUrl = localPublicBaseUrl == null ? "" : localPublicBaseUrl;
     this.customerLocalFallbackEnabled = customerLocalFallbackEnabled;
   }
 
@@ -138,6 +141,13 @@ public class UploadController {
   }
 
   private String buildLocalPublicUrl(String key) {
+    if (!localPublicBaseUrl.isBlank()) {
+      String base = localPublicBaseUrl.endsWith("/")
+          ? localPublicBaseUrl.substring(0, localPublicBaseUrl.length() - 1)
+          : localPublicBaseUrl;
+      return base + "/uploads/" + key;
+    }
+
     return ServletUriComponentsBuilder.fromCurrentContextPath()
         .path("/uploads/")
         .path(key)

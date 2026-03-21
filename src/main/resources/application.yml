@@ -27,6 +27,7 @@ spring:
 
 server:
   port: 8080
+  forward-headers-strategy: framework
   tomcat:
     max-http-form-post-size: 10MB
 
@@ -39,6 +40,8 @@ storage:
     publicBaseUrl: ${R2_PUBLIC_BASE_URL:}
   upload:
     customerFallbackEnabled: ${CUSTOMER_UPLOAD_LOCAL_FALLBACK:false}
+  local:
+    publicBaseUrl: ${LOCAL_UPLOAD_PUBLIC_BASE_URL:}
 
 admin:
   bootstrap:
