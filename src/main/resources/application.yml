@@ -32,14 +32,6 @@ server:
     max-http-form-post-size: 10MB
 
 storage:
-  r2:
-    endpoint: ${R2_ENDPOINT:}
-    accessKey: ${R2_ACCESS_KEY:}
-    secretKey: ${R2_SECRET_KEY:}
-    bucket: ${R2_BUCKET:}
-    publicBaseUrl: ${R2_PUBLIC_BASE_URL:}
-  upload:
-    customerFallbackEnabled: ${CUSTOMER_UPLOAD_LOCAL_FALLBACK:false}
   local:
     publicBaseUrl: ${LOCAL_UPLOAD_PUBLIC_BASE_URL:}
 
