@@ -19,7 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 @RestController
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174", "https://fieldbakers.me", "https://www.fieldbakers.me"})
 public class UploadController {
   private static final long MAX_BYTES = 8L * 1024 * 1024;
   private static final Set<String> ALLOWED_EXTENSIONS = Set.of(
