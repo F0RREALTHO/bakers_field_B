@@ -53,7 +53,7 @@ public class CatalogController {
           product.getCategory().getId(),
           product.getCategory().getName(),
           Boolean.TRUE.equals(product.getFeatured()),
-          product.getIngredients(),
+          new java.util.ArrayList<>(product.getIngredients()),
           product.getCalories(),
           product.getProtein(),
           product.getWeightKg(),
