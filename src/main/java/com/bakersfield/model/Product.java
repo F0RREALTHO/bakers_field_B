@@ -68,4 +68,10 @@ public class Product {
 
   @Column(length = 100)
   private String protein;
+
+  @Column
+  private Double weightKg;
+
+  @Column(nullable = false)
+  private Boolean active = true;
 }

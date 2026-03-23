@@ -41,6 +41,7 @@ public class CatalogController {
       .orElseGet(productRepository::findAllByOrderByIdAsc);
 
     return products.stream()
+        .filter(product -> Boolean.TRUE.equals(product.getActive()))
         .map(product -> new ProductResponse(
           product.getId(),
           product.getName(),
@@ -53,7 +54,9 @@ public class CatalogController {
           Boolean.TRUE.equals(product.getFeatured()),
           product.getIngredients(),
           product.getCalories(),
-          product.getProtein())))
+          product.getProtein(),
+          product.getWeightKg(),
+          Boolean.TRUE.equals(product.getActive()))))
         .toList();
   }
 
@@ -72,7 +75,9 @@ public class CatalogController {
       boolean featured,
       List<String> ingredients,
       String calories,
-      String protein) {
+      String protein,
+      Double weightKg,
+      boolean active) {
   }
 
   public record TagResponse(

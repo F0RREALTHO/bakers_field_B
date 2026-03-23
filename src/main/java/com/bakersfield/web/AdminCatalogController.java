@@ -164,6 +164,12 @@ public class AdminCatalogController {
     product.setIngredients(request.ingredients() != null ? new java.util.ArrayList<>(request.ingredients()) : new java.util.ArrayList<>());
     product.setCalories(request.calories());
     product.setProtein(request.protein());
+    product.setWeightKg(request.weightKg());
+    if (request.active() != null) {
+      product.setActive(request.active());
+    } else if (product.getActive() == null) {
+      product.setActive(true);
+    }
     if (request.featured() != null) {
       product.setFeatured(request.featured());
     }
@@ -215,7 +221,9 @@ public class AdminCatalogController {
       Boolean featured,
       List<String> ingredients,
       String calories,
-      String protein) {
+      String protein,
+      Double weightKg,
+      Boolean active) {
   }
 
   public record FeaturedRequest(boolean featured) {
@@ -233,7 +241,9 @@ public class AdminCatalogController {
       boolean featured,
       List<String> ingredients,
       String calories,
-      String protein) {
+      String protein,
+      Double weightKg,
+      boolean active) {
 
     public static ProductResponse from(Product product) {
       return new ProductResponse(
@@ -248,7 +258,9 @@ public class AdminCatalogController {
           Boolean.TRUE.equals(product.getFeatured()),
           product.getIngredients(),
           product.getCalories(),
-          product.getProtein());
+          product.getProtein(),
+          product.getWeightKg(),
+          Boolean.TRUE.equals(product.getActive()));
     }
   }
 
