@@ -156,6 +156,7 @@ public class AdminCatalogController {
   private void applyProduct(Product product, ProductRequest request, Category category) {
     product.setName(request.name());
     product.setPriceInr(request.priceInr());
+    product.setOriginalPriceInr(request.originalPriceInr());
     product.setDescription(request.description());
     product.setImageUrl(request.imageUrl());
     Set<Tag> tags = new HashSet<>(resolveTags(request.tagIds()));
@@ -214,6 +215,7 @@ public class AdminCatalogController {
   public record ProductRequest(
       @NotBlank String name,
       @NotNull BigDecimal priceInr,
+      BigDecimal originalPriceInr,
       String description,
       String imageUrl,
       List<Long> tagIds,
@@ -233,6 +235,7 @@ public class AdminCatalogController {
       Long id,
       String name,
       BigDecimal priceInr,
+      BigDecimal originalPriceInr,
       String description,
       String imageUrl,
       List<TagResponse> tags,
@@ -250,6 +253,7 @@ public class AdminCatalogController {
           product.getId(),
           product.getName(),
           product.getPriceInr(),
+          product.getOriginalPriceInr(),
           product.getDescription(),
           product.getImageUrl(),
           product.getTags().stream().map(TagResponse::from).toList(),
