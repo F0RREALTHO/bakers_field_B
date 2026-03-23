@@ -12,8 +12,12 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.CollectionTable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -53,4 +57,15 @@ public class Product {
 
   @Column
   private Boolean featured = false;
+
+  @ElementCollection
+  @CollectionTable(name = "product_ingredients", joinColumns = @JoinColumn(name = "product_id"))
+  @Column(name = "ingredient")
+  private List<String> ingredients = new ArrayList<>();
+
+  @Column(length = 100)
+  private String calories;
+
+  @Column(length = 100)
+  private String protein;
 }

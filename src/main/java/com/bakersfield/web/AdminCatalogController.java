@@ -159,9 +159,11 @@ public class AdminCatalogController {
     product.setDescription(request.description());
     product.setImageUrl(request.imageUrl());
     Set<Tag> tags = new HashSet<>(resolveTags(request.tagIds()));
-    tags.addAll(resolveCommonTags());
     product.setTags(tags);
     product.setCategory(category);
+    product.setIngredients(request.ingredients() != null ? new java.util.ArrayList<>(request.ingredients()) : new java.util.ArrayList<>());
+    product.setCalories(request.calories());
+    product.setProtein(request.protein());
     if (request.featured() != null) {
       product.setFeatured(request.featured());
     }
@@ -210,7 +212,10 @@ public class AdminCatalogController {
       String imageUrl,
       List<Long> tagIds,
       @NotNull Long categoryId,
-      Boolean featured) {
+      Boolean featured,
+      List<String> ingredients,
+      String calories,
+      String protein) {
   }
 
   public record FeaturedRequest(boolean featured) {
@@ -225,7 +230,10 @@ public class AdminCatalogController {
       List<TagResponse> tags,
       Long categoryId,
       String categoryName,
-      boolean featured) {
+      boolean featured,
+      List<String> ingredients,
+      String calories,
+      String protein) {
 
     public static ProductResponse from(Product product) {
       return new ProductResponse(
@@ -237,7 +245,10 @@ public class AdminCatalogController {
           product.getTags().stream().map(TagResponse::from).toList(),
           product.getCategory().getId(),
           product.getCategory().getName(),
-          Boolean.TRUE.equals(product.getFeatured()));
+          Boolean.TRUE.equals(product.getFeatured()),
+          product.getIngredients(),
+          product.getCalories(),
+          product.getProtein());
     }
   }
 

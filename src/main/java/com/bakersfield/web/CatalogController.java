@@ -50,7 +50,10 @@ public class CatalogController {
           product.getTags().stream().map(TagResponse::from).toList(),
           product.getCategory().getId(),
           product.getCategory().getName(),
-          Boolean.TRUE.equals(product.getFeatured())))
+          Boolean.TRUE.equals(product.getFeatured()),
+          product.getIngredients(),
+          product.getCalories(),
+          product.getProtein())))
         .toList();
   }
 
@@ -66,7 +69,10 @@ public class CatalogController {
       List<TagResponse> tags,
       Long categoryId,
       String categoryName,
-      boolean featured) {
+      boolean featured,
+      List<String> ingredients,
+      String calories,
+      String protein) {
   }
 
   public record TagResponse(
