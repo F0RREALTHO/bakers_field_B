@@ -57,7 +57,7 @@ public class CatalogController {
           product.getCalories(),
           product.getProtein(),
           product.getWeightKg(),
-          Boolean.TRUE.equals(product.getActive()))))
+          Boolean.TRUE.equals(product.getActive())))
         .toList();
   }
 
