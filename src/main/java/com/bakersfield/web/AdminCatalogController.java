@@ -51,6 +51,7 @@ public class AdminCatalogController {
     this.dataChangePublisher = dataChangePublisher;
   }
 
+  @jakarta.transaction.Transactional
   @GetMapping("/products")
   public List<ProductResponse> getProducts() {
     return productRepository.findAllByOrderByNameAsc().stream()
